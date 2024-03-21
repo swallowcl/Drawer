@@ -12,8 +12,8 @@ public class Drawer
     // instance variables 
     private double startX, startY; // fields to remember 'pressed' position
     private Color currentColor = Color.black; // default colour is black
-    private double currentSize = 50;
-    private String currentShape = "line";
+    private double currentSize = 50; // default element size
+    private String currentElement = "line"; // default element is line
 
     /**
      * Constructor for objects of class LineDrawer
@@ -39,7 +39,7 @@ public class Drawer
      */
     public void randomColor() {
         Color col = new Color((float) Math.random(), (float)Math.random(), (float) Math.random());
-        UI.setColor(col);
+        UI.setColor(col); // new colour set to random colour
     }
     
     /**
@@ -47,7 +47,7 @@ public class Drawer
      */
     public void doChooseColor() {
         this.currentColor = JColorChooser.showDialog(null, "Choose Color",this.currentColor);
-        UI.setColor(this.currentColor);
+        UI.setColor(this.currentColor); // changes element colour to what user has chosen
         
     }
     
@@ -55,7 +55,7 @@ public class Drawer
      * Call back for clearing graphics pane
      */
     public void clearScreen() {
-        UI.clearGraphics();
+        UI.clearGraphics(); // clears screen completely
         
     }
     
@@ -64,38 +64,38 @@ public class Drawer
      * Call back for changing line size
      */
     public void changeSize(double newSize){
-       UI.setLineWidth(newSize);
-       currentSize = (newSize);
+       UI.setLineWidth(newSize); 
+       currentSize = (newSize); // changes size to new size on slider
     }
     
      /**
      * Call back method for rectangle
      */
     public void drawRectangle() {
-        currentShape = "rectangle";
+        currentElement = "rectangle";
     }
     
      /**
      * Call back method for rectangle
      */
     public void drawLine() {
-        currentShape = "line";
+        currentElement = "line";
     }
     
     /**
      * Call back method for circle
      */
     public void drawCircle() {
-        currentShape = "circle";
+        currentElement = "circle";
     }
     
      /**
      * Call back method for circle
      */
     public void drawText(String s) {
-        UI.drawString(s, startX, startY);
-        currentShape = "text";
-        UI.setFontSize(currentSize);
+        currentElement = "text";
+        UI.setFontSize(currentSize); // font size determind by slider
+        UI.drawString(s, startX, startY); // draws where user last clicked
         
 
     }
@@ -111,9 +111,11 @@ public class Drawer
             //store the pressed position
             this.startX = x;
             this.startY = y;
-        }else if (action.equals("released")){ // draw circle, line, or rectangle when mouse is released
+        // draw circle, line, or rectangle when mouse is released
+        }else if (action.equals("released") && currentElement != "text"){ // does not run if user is entering text
             // draws rectangle
-            if (currentShape.equals("rectangle")){
+            if (currentElement.equals("rectangle")){
+                // rectangle can be drawn despite start/end x & y positions
                 if (x > startX && y > startY) {
                 UI.fillRect(this.startX, this.startY, x-startX, y-startY);
                 
@@ -129,11 +131,12 @@ public class Drawer
             }
             
             // draws line
-            else if (currentShape.equals("line")){
+            else if (currentElement.equals("line")){
                 UI.drawLine(this.startX, this.startY, x, y);
         } 
             // draws circle        
-            else if(currentShape.equals("circle")){
+            else if(currentElement.equals("circle")){
+                // oval can be drawn despite start/end x & y positions
                 if (x > startX && y > startY) {
                 UI.fillOval(this.startX, this.startY, x-this.startX, y-this.startY);
                 
@@ -145,14 +148,9 @@ public class Drawer
                 }
                 else if (x < startX && y > startY) {
                 UI.fillOval( x, this.startY,this.startX-x,y-this.startY);
-                } 
-            }
-            
+                }
+            }        
     }
-    // calls text method and adds text to screen
-    else if (currentShape.equals("text")){
-            
-        }
     }
 
 }
